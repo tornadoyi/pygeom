@@ -38,7 +38,7 @@ def center(rs): rs=_B(rs); return pt.create(_left(rs) + _width(rs) / 2, _top(rs)
 
 def top_left(rs): rs=_B(rs); return pt.create(_left(rs), _top(rs))
 
-def top_right(rs): rs=_B(rs); pt.create(_right(rs), _top(rs))
+def top_right(rs): rs=_B(rs); return pt.create(_right(rs), _top(rs))
 
 def bottom_left(rs): rs=_B(rs); return pt.create(_left(rs), _bottom(rs))
 
@@ -80,17 +80,17 @@ def IoU(rs1, rs2): rs1, rs2 = _B(rs1), _B(rs2); return _intersect(rs1, rs2) / _u
 
 def contains(rs, ps): 
 	rs, ps = _B(rs), pt._B(ps)
-	x, y = pt.x(ps)[np.newaxis, :], pt.y(ps)[np.newaxis, :]
-	l, r, t, b = left(rs)[:, np.newaxis], right(rs)[:, np.newaxis], top(rs)[:, np.newaxis], bottom(rs)[:, np.newaxis]
+	x, y = pt._x(ps)[np.newaxis, :], pt._y(ps)[np.newaxis, :]
+	l, r, t, b = _left(rs)[:, np.newaxis], _right(rs)[:, np.newaxis], _top(rs)[:, np.newaxis], _bottom(rs)[:, np.newaxis]
 	return (x >= l) & (x <= r) & (y >= t) & (y <= b)
 
 def clip_top_bottom(rs, min, max=None): 
-	clip_t, clip_b = np.clip(top(rs), min, max), np.clip(bottom(rs), min, max)
-	return create(left(rs), clip_t, width(rs), clip_b-clip_t+1, rs.dtype)
+	clip_t, clip_b = np.clip(_top(rs), min, max), np.clip(_bottom(rs), min, max)
+	return create(_left(rs), clip_t, _width(rs), clip_b-clip_t+1, rs.dtype)
 
 def clip_left_right(rs, min, max=None): 
-	clip_l, clip_r = np.clip(left(rs), min, max), np.clip(right(rs), min, max)
-	return create(clip_l, top(rs), clip_r - clip_l + 1, height(rs), rs.dtype)
+	clip_l, clip_r = np.clip(_left(rs), min, max), np.clip(_right(rs), min, max)
+	return create(clip_l, _top(rs), clip_r - clip_l + 1, _height(rs), rs.dtype)
 
 def _top(rs): return rs[:, 1]
 
@@ -110,7 +110,7 @@ def _center(rs): return pt.create(_left(rs) + _width(rs) / 2, _top(rs) + _height
 
 def _top_left(rs): return pt.create(_left(rs), _top(rs))
 
-def _top_right(rs): pt.create(_right(rs), _top(rs))
+def _top_right(rs): return pt.create(_right(rs), _top(rs))
 
 def _bottom_left(rs): return pt.create(_left(rs), _bottom(rs))
 
@@ -171,4 +171,4 @@ def _C(rs):
 	else: raise Exception("invalid rectangle structure, dims is {}".format(ndim))
 	return rs if isinstance(rs, np.ndarray) else np.asarray(rs)
 
-def _B(rs): return _C(rs).reshape(-1, 2)
+def _B(rs): return _C(rs).reshape(-1, 4)

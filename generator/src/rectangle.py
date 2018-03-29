@@ -19,7 +19,7 @@ _TEMPLATE_FUNC = cg.F([
     '',
     cg.pydef('{F_PR}top_left', ['rs'], ['{BR_s}return pt.create(_left(rs), _top(rs))']),
     '',
-    cg.pydef('{F_PR}top_right', ['rs'], ['{BR_s}pt.create(_right(rs), _top(rs))']),
+    cg.pydef('{F_PR}top_right', ['rs'], ['{BR_s}return pt.create(_right(rs), _top(rs))']),
     '',
     cg.pydef('{F_PR}bottom_left', ['rs'], ['{BR_s}return pt.create(_left(rs), _bottom(rs))']),
     '',
@@ -63,19 +63,19 @@ _TEMPLATE_FUNC = cg.F([
     '',
     cg.pydef('{F_PR}contains', ['rs, ps'], [
         '{BRP}',
-        'x, y = pt.{F_PR}x(ps)[np.newaxis, :], pt.{F_PR}y(ps)[np.newaxis, :]',
-        'l, r, t, b = {F_PR}left(rs)[:, np.newaxis], {F_PR}right(rs)[:, np.newaxis], {F_PR}top(rs)[:, np.newaxis], {F_PR}bottom(rs)[:, np.newaxis]',
+        'x, y = pt._x(ps)[np.newaxis, :], pt._y(ps)[np.newaxis, :]',
+        'l, r, t, b = _left(rs)[:, np.newaxis], _right(rs)[:, np.newaxis], _top(rs)[:, np.newaxis], _bottom(rs)[:, np.newaxis]',
         'return (x >= l) & (x <= r) & (y >= t) & (y <= b)'
     ]),
     '',
     cg.pydef('{F_PR}clip_top_bottom', ['rs, min', 'max=None'], [
-        'clip_t, clip_b = np.clip({F_PR}top(rs), min, max), np.clip({F_PR}bottom(rs), min, max)',
-        'return create({F_PR}left(rs), clip_t, {F_PR}width(rs), clip_b-clip_t+1, rs.dtype)'
+        'clip_t, clip_b = np.clip(_top(rs), min, max), np.clip(_bottom(rs), min, max)',
+        'return create(_left(rs), clip_t, _width(rs), clip_b-clip_t+1, rs.dtype)'
     ]),
     '',
     cg.pydef('{F_PR}clip_left_right', ['rs, min', 'max=None'], [
-        'clip_l, clip_r = np.clip({F_PR}left(rs), min, max), np.clip({F_PR}right(rs), min, max)',
-        'return create(clip_l, {F_PR}top(rs), clip_r - clip_l + 1, {F_PR}height(rs), rs.dtype)'
+        'clip_l, clip_r = np.clip(_left(rs), min, max), np.clip(_right(rs), min, max)',
+        'return create(clip_l, _top(rs), clip_r - clip_l + 1, _height(rs), rs.dtype)'
     ]),
 
 ])
@@ -123,6 +123,6 @@ SRC = cg.generate([
         'return rs if isinstance(rs, np.ndarray) else np.asarray(rs)',
     ]),
     '',
-    cg.pydef('_B', ['rs'], ['return _C(rs).reshape(-1, 2)']),
+    cg.pydef('_B', ['rs'], ['return _C(rs).reshape(-1, 4)']),
 
 ])
