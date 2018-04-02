@@ -21,8 +21,8 @@ _TEMPLATE_FUNC = cg.F([
 
 SRC = cg.generate([
     cg.import_as('numpy', 'np'),
-    cg.from_import_as('.', 'rectangle', 'rt'),
-    cg.from_import('.rectangle', '*'),
+    cg.from_import_as('pygeom', 'rectangle', 'rt'),
+    cg.from_import('pygeom.rectangle', '*'),
     '',
     '_DTYPES = [np.int, np.int8, np.int16, np.int32, np.int64, np.long, np.longlong]',
     '',

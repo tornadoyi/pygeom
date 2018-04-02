@@ -34,9 +34,13 @@ def create_pygeom(src_path):
     from generator.src import rectangle
     create_file(os.path.join(src_path, 'rectangle.py'), rectangle.SRC)
 
-    # create rectangle
+    # create pixel rect
     from generator.src import pixel_rect
     create_file(os.path.join(src_path, 'pixel_rect.py'), pixel_rect.SRC)
+
+    # create polygon
+    from generator.src import polygon
+    create_file(os.path.join(src_path, 'polygon.py'), polygon.SRC)
 
 
 

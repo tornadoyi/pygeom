@@ -1,5 +1,5 @@
 import numpy as np
-from . import point2d as pt
+from pygeom import point2d as pt
 
 def create(xs, ys, ws, hs, dtype=None): 
 	assert np.shape(xs) == np.shape(ys) == np.shape(ws) == np.shape(hs)

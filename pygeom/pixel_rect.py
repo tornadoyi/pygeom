@@ -1,6 +1,6 @@
 import numpy as np
-from . import rectangle as rt
-from .rectangle import * 
+from pygeom import rectangle as rt
+from pygeom.rectangle import * 
 
 _DTYPES = [np.int, np.int8, np.int16, np.int32, np.int64, np.long, np.longlong]
 

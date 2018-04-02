@@ -84,7 +84,7 @@ _TEMPLATE_FUNC = cg.F([
 
 SRC = cg.generate([
     cg.import_as('numpy', 'np'),
-    cg.from_import_as('.', 'point2d', 'pt'),
+    cg.from_import_as('pygeom', 'point2d', 'pt'),
     '',
     cg.pydef('create', ['xs', 'ys', 'ws', 'hs', 'dtype=None'], [
         'assert np.shape(xs) == np.shape(ys) == np.shape(ws) == np.shape(hs)',

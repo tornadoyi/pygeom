@@ -26,7 +26,7 @@ SRC = cg.generate([
     cg.pydef('_C', ['p'], [
         'ndim = np.ndim(p)',
         'if ndim == 1: assert len(p) == 2',
-        'elif ndim == 2: np.shape(p)[1] == 2',
+        'elif ndim == 2: assert np.shape(p)[1] == 2',
         'else: raise Exception("invalid point structure, dims is {}".format(ndim))',
         'return p if isinstance(p, np.ndarray) else np.asarray(p)',
     ]),
