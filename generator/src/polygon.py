@@ -4,7 +4,8 @@ _TEMPLATE_FUNC = cg.F([
     cg.pydef('{F_PR}npoint', ['ps'], ['return {P}.shape[1] >> 1']),
     '',
     cg.pydef('{F_PR}bounding_rect', ['ps'], [
-        'ps = {P}.reshape(len(ps), -1 ,2)',
+        'ps = {P}',
+        'ps = ps.reshape(len(ps), -1 ,2)',
         'xs, ys = ps[:, :, 0], ps[:, :, 1]',
         'min_x, max_x = np.min(xs, axis=1), np.max(xs, axis=1)',
         'min_y, max_y = np.min(ys, axis=1), np.max(ys, axis=1)',
@@ -12,7 +13,8 @@ _TEMPLATE_FUNC = cg.F([
     ]),
     '',
     cg.pydef('{F_PR}bounding_pixel_rect', ['ps'], [
-        'ps = {P}.reshape(len(ps), -1 ,2)',
+        'ps = {P}',
+        'ps = ps.reshape(len(ps), -1 ,2)',
         'xs, ys = ps[:, :, 0], ps[:, :, 1]',
         'min_x, max_x = np.min(xs, axis=1), np.max(xs, axis=1)',
         'min_y, max_y = np.min(ys, axis=1), np.max(ys, axis=1)',

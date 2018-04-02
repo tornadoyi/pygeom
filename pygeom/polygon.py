@@ -9,14 +9,16 @@ def aspoly(ps): return _C(ps)
 def npoint(ps): return _B(ps).shape[1] >> 1
 
 def bounding_rect(ps): 
-	ps = _B(ps).reshape(len(ps), -1 ,2)
+	ps = _B(ps)
+	ps = ps.reshape(len(ps), -1 ,2)
 	xs, ys = ps[:, :, 0], ps[:, :, 1]
 	min_x, max_x = np.min(xs, axis=1), np.max(xs, axis=1)
 	min_y, max_y = np.min(ys, axis=1), np.max(ys, axis=1)
 	return rt.create(min_x, min_y, max_x-min_x, max_y-min_y)
 
 def bounding_pixel_rect(ps): 
-	ps = _B(ps).reshape(len(ps), -1 ,2)
+	ps = _B(ps)
+	ps = ps.reshape(len(ps), -1 ,2)
 	xs, ys = ps[:, :, 0], ps[:, :, 1]
 	min_x, max_x = np.min(xs, axis=1), np.max(xs, axis=1)
 	min_y, max_y = np.min(ys, axis=1), np.max(ys, axis=1)
@@ -25,6 +27,7 @@ def bounding_pixel_rect(ps):
 def _npoint(ps): return ps.shape[1] >> 1
 
 def _bounding_rect(ps): 
+	ps = ps
 	ps = ps.reshape(len(ps), -1 ,2)
 	xs, ys = ps[:, :, 0], ps[:, :, 1]
 	min_x, max_x = np.min(xs, axis=1), np.max(xs, axis=1)
@@ -32,6 +35,7 @@ def _bounding_rect(ps):
 	return rt.create(min_x, min_y, max_x-min_x, max_y-min_y)
 
 def _bounding_pixel_rect(ps): 
+	ps = ps
 	ps = ps.reshape(len(ps), -1 ,2)
 	xs, ys = ps[:, :, 0], ps[:, :, 1]
 	min_x, max_x = np.min(xs, axis=1), np.max(xs, axis=1)
