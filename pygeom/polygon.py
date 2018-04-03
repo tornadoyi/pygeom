@@ -3,34 +3,38 @@ import cv2
 from pygeom import rectangle as rt
 from pygeom import pixel_rect as pr
 
-def create(ps, dtype=None): return _C(ps).astype(dtype)
+def create(ps, dtype=None, keepdims=False): return _C(ps).astype(dtype)
 
 def aspoly(ps): return _C(ps)
 
 def npoint(ps): return _B(ps).shape[1] >> 1
 
-def bounding_rect(ps): 
+def bounding_rect(ps, keepdim=False): 
+	dims = np.ndim(ps)
 	ps = _B(ps)
 	ps = ps.reshape(len(ps), -1 ,2)
 	xs, ys = ps[:, :, 0], ps[:, :, 1]
 	min_x, max_x = np.min(xs, axis=1), np.max(xs, axis=1)
 	min_y, max_y = np.min(ys, axis=1), np.max(ys, axis=1)
-	return rt.create(min_x, min_y, max_x-min_x, max_y-min_y)
+	rs = rt.create(min_x, min_y, max_x-min_x, max_y-min_y)
+	return rt._D(rs, dims) if keepdim else rs
 
-def bounding_pixel_rect(ps): 
+def bounding_pixel_rect(ps, keepdim=False): 
+	dims = np.ndim(ps)
 	ps = _B(ps)
 	ps = ps.reshape(len(ps), -1 ,2)
 	xs, ys = ps[:, :, 0], ps[:, :, 1]
 	min_x, max_x = np.min(xs, axis=1), np.max(xs, axis=1)
 	min_y, max_y = np.min(ys, axis=1), np.max(ys, axis=1)
-	return pr.create(min_x, min_y, max_x-min_x, max_y-min_y)
+	rs = pr.create(min_x, min_y, max_x-min_x, max_y-min_y)
+	return rt._D(rs, dims) if keepdim else rs
 
 def IoU_pixel(ps1, ps2): 
 	ps1 = _B(ps1).astype(np.int64)
 	ps2 = _B(ps2).astype(np.int64)
 	assert len(ps1) == len(ps2)
-	rs = _bounding_pixel_rect(np.hstack([ps1, ps2])).reshape(len(ps1), -1)
-	brs = pr.bottom_right(rs).reshape(len(ps1), -1)
+	rs = _bounding_pixel_rect(np.hstack([ps1, ps2]))
+	brs = pr._bottom_right(rs).reshape(-1, 2)
 	ious = []
 	for i in range(len(rs)):
 		br = brs[i]
@@ -45,28 +49,32 @@ def IoU_pixel(ps1, ps2):
 
 def _npoint(ps): return ps.shape[1] >> 1
 
-def _bounding_rect(ps): 
+def _bounding_rect(ps, keepdim=True): 
+	dims = np.ndim(ps)
 	ps = ps
 	ps = ps.reshape(len(ps), -1 ,2)
 	xs, ys = ps[:, :, 0], ps[:, :, 1]
 	min_x, max_x = np.min(xs, axis=1), np.max(xs, axis=1)
 	min_y, max_y = np.min(ys, axis=1), np.max(ys, axis=1)
-	return rt.create(min_x, min_y, max_x-min_x, max_y-min_y)
+	rs = rt.create(min_x, min_y, max_x-min_x, max_y-min_y)
+	return rt._D(rs, dims) if keepdim else rs
 
-def _bounding_pixel_rect(ps): 
+def _bounding_pixel_rect(ps, keepdim=True): 
+	dims = np.ndim(ps)
 	ps = ps
 	ps = ps.reshape(len(ps), -1 ,2)
 	xs, ys = ps[:, :, 0], ps[:, :, 1]
 	min_x, max_x = np.min(xs, axis=1), np.max(xs, axis=1)
 	min_y, max_y = np.min(ys, axis=1), np.max(ys, axis=1)
-	return pr.create(min_x, min_y, max_x-min_x, max_y-min_y)
+	rs = pr.create(min_x, min_y, max_x-min_x, max_y-min_y)
+	return rt._D(rs, dims) if keepdim else rs
 
 def _IoU_pixel(ps1, ps2): 
 	ps1 = ps1.astype(np.int64)
 	ps2 = ps2.astype(np.int64)
 	assert len(ps1) == len(ps2)
-	rs = _bounding_pixel_rect(np.hstack([ps1, ps2])).reshape(len(ps1), -1)
-	brs = pr.bottom_right(rs).reshape(len(ps1), -1)
+	rs = _bounding_pixel_rect(np.hstack([ps1, ps2]))
+	brs = pr._bottom_right(rs).reshape(-1, 2)
 	ious = []
 	for i in range(len(rs)):
 		br = brs[i]

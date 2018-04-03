@@ -1,9 +1,11 @@
 import numpy as np
 
-def create(xs, ys, dtype=None): 
+def create(xs, ys, dtype=None, keepdims=False): 
 	assert np.shape(xs) == np.shape(ys)
-	return np.hstack([np.asarray(xs, dtype=dtype).reshape(-1, 1),
-	np.asarray(ys, dtype=dtype).reshape(-1, 1)]).squeeze()
+	ps = np.hstack([
+		np.asarray(xs, dtype=dtype).reshape(-1, 1),
+		np.asarray(ys, dtype=dtype).reshape(-1, 1)])
+	return _D(ps, np.ndim(xs)) if keepdims else ps.squeeze()
 
 def aspoint(p): return _C(p)
 
@@ -23,3 +25,9 @@ def _C(p):
 	return p if isinstance(p, np.ndarray) else np.asarray(p)
 
 def _B(p): return _C(p).reshape(-1, 2)
+
+def _D(p, dims): 
+	if p.ndim == dims: return p
+	if dims == 1: return p.reshape(2)
+	elif dims == 2: return p.reshape(-1, 2)
+	else: raise Exception("invalid expected dims {}".format(dims))
